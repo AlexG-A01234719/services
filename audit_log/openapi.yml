@@ -1,0 +1,140 @@
+openapi: 3.0.0 
+info: 
+  description: This API provides audit info 
+  version: "1.0.0" 
+  title: Food Audit API 
+  contact: 
+    email: mmulder10@bcit.ca 
+ 
+paths: 
+  /food_item: 
+    get: 
+      summary: gets a food item from history 
+      operationId: app.get_food_item 
+      description: Gets food item readings from the event store 
+      parameters: 
+        - name: index 
+          in: query 
+          description: Gets the Food Item at the index in the event store 
+          schema: 
+            type: integer 
+            example: 10
+      responses: 
+        '200': 
+          description: Successfully returned a Food Item event 
+          content: 
+            application/json: 
+              schema: 
+                type: object 
+                items: 
+                  $ref: '#/components/schemas/FoodItem' 
+        '400': 
+          description: Invalid request 
+          content: 
+            application/json: 
+              schema: 
+                type: object 
+                properties: 
+                  message: 
+                    type: string 
+        '404': 
+          description: Not Found 
+          content: 
+            application/json: 
+              schema: 
+                type: object 
+                properties: 
+                  message: 
+                    type: string 
+ 
+  /drink_item: 
+    get: 
+      summary: gets a drink item from history 
+      operationId: app.get_drink_item 
+      description: Gets drink item readings from the event store 
+      parameters: 
+        - name: index 
+          in: query 
+          description: Gets the Drink Item at the index in the event store 
+          schema: 
+            type: integer 
+            example: 10
+      responses: 
+        '200': 
+          description: Successfully returned a Drink Item event 
+          content: 
+            application/json: 
+              schema: 
+                type: object 
+                items: 
+                  $ref: '#/components/schemas/DrinkItem' 
+        '400': 
+          description: Invalid request 
+          content: 
+            application/json: 
+              schema: 
+                type: object 
+                properties: 
+                  message: 
+                    type: string 
+        '404': 
+          description: Not Found 
+          content: 
+            application/json: 
+              schema: 
+                type: object 
+                properties: 
+                  message: 
+                    type: string 
+ 
+components:
+  schemas:
+    FoodItem:
+      required:
+      - food_id
+      - food_name
+      - calorie
+      - weight
+      - trace_id
+      properties:
+        food_id:
+          type: string
+          example: a1234
+        food_name:
+          type: string
+          example: pizza
+        calorie:
+          type: number
+          example: 123
+        weight:
+          type: number
+          example: 32.1
+        trace_id:
+          type: string
+          example: a09eea70-838f-11ec-a8a3-0242ac120002
+      type: object
+        
+    DrinkItem:
+      required:
+      - drink_id
+      - drink_name
+      - calorie
+      - volume
+      - trace_id
+      properties:
+        drink_id:
+          type: string
+          example: b2345
+        drink_name:
+          type: string
+          example: coke
+        calorie:
+          type: number
+          example: 321
+        volume:
+          type: number
+          example: 12.3
+        trace_id:
+          type: string
+          example: 9c01b3d0-838f-11ec-a8a3-0242ac120002
+      type: object

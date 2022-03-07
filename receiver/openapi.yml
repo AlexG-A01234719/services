@@ -1,0 +1,93 @@
+openapi: 3.0.0
+info:
+  description: This API receives input from users about food
+  version: "1.0.0"
+  title: Food Receiver API
+  contact:
+    email: aguo11@my.bcit.ca
+tags:
+  - name: food
+    description: Food items
+    
+paths:
+  /food:
+    post:
+      tags:
+        - food
+      summary: inputs a food item
+      operationId: app.add_food
+      description: Adds a new food item
+      responses:
+        '201':
+          description: item created
+        '400':
+          description: 'invalid input, object invalid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FoodItem'
+        description: Reading item to add
+        
+  /drink:
+    post:
+      tags:
+        - drink
+      summary: inputs a drink item
+      operationId: app.add_drink
+      description: Adds a new drink item
+      responses:
+        '201':
+          description: item created
+        '400':
+          description: 'invalid input, object invalid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DrinkItem'
+        description: Reading item to add
+        
+components:
+  schemas:
+    FoodItem:
+      required:
+      - food_id
+      - food_name
+      - calorie
+      - weight
+      properties:
+        food_id:
+          type: string
+          example: a1234
+        food_name:
+          type: string
+          example: pizza
+        calorie:
+          type: integer
+          example: 123
+        weight:
+          type: number
+          example: 32.1
+      type: object
+        
+    DrinkItem:
+      required:
+      - drink_id
+      - drink_name
+      - calorie
+      - volume
+      properties:
+        drink_id:
+          type: string
+          example: b2345
+        drink_name:
+          type: string
+          example: coke
+        calorie:
+          type: integer
+          example: 321
+        volume:
+          type: number
+          example: 12.3
+      type: object

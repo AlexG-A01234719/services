@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  description: This API receives input from users about food
+  version: "1.0.0"
+  title: Food Processing API
+  contact:
+    email: aguo11@my.bcit.ca
+tags:
+  - name: food
+    description: Food items
+    
+paths: 
+  /stats: 
+    get: 
+      summary: Gets the event stats 
+      operationId: app.get_stats 
+      description: Gets Food Item and Drink Item processsed statistics
+      responses: 
+        '200': 
+          description: Successfully returned a list of Food and Drink Items events 
+          content: 
+            application/json: 
+              schema: 
+                type: object 
+                items: 
+                  $ref: '#/components/schemas/ReadingStats'
+        '400': 
+          description: Invalid request 
+          content: 
+            application/json: 
+              schema: 
+                type: object 
+                properties: 
+                  message: 
+                    type: string 
+ 
+components: 
+  schemas: 
+    ReadingStats: 
+      required: 
+      - num_fi_entries
+      - total_fi_calorie
+      - num_di_entries 
+      - total_di_calorie
+      properties: 
+        num_fi_entries: 
+          type: number 
+          example: 200 
+        total_fi_calorie: 
+          type: number 
+          example: 500000 
+        num_di_entries: 
+          type: number 
+          example: 200 
+        total_di_calorie: 
+          type: number 
+          example: 500000 
+      type: object

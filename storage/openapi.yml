@@ -1,0 +1,132 @@
+openapi: 3.0.0
+info:
+  description: This API receives input from users about food
+  version: "1.0.0"
+  title: Food Storage API
+  contact:
+    email: aguo11@my.bcit.ca
+tags:
+  - name: food
+    description: Food items
+    
+paths:
+  /food:
+    get: 
+      tags: 
+        - food 
+      summary: gets new food items 
+      operationId: app.get_food_items 
+      description: Gets food items added after a timestamp 
+      parameters: 
+        - name: timestamp 
+          in: query 
+          description: Limits the number of items on a page 
+          schema: 
+            type: string 
+            format: date-time 
+            example: 2016-08-29T09:12:33Z 
+      responses: 
+        '200': 
+          description: Successfully returned a list of food item
+          content: 
+            application/json: 
+              schema: 
+                type: array 
+                items: 
+                  $ref: '#/components/schemas/FoodItem' 
+        '400': 
+          description: Invalid request 
+          content: 
+            application/json: 
+              schema: 
+                type: object 
+                properties: 
+                  message: 
+                    type: string
+
+  /drink:
+    get: 
+      tags: 
+        - drink 
+      summary: gets new drink items 
+      operationId: app.get_drink_items 
+      description: Gets food items added after a timestamp 
+      parameters: 
+        - name: timestamp 
+          in: query 
+          description: Limits the number of items on a page 
+          schema: 
+            type: string 
+            format: date-time 
+            example: 2016-08-29T09:12:33.001Z 
+      responses: 
+        '200': 
+          description: Successfully returned a list of drink item events
+          content: 
+            application/json: 
+              schema: 
+                type: array 
+                items: 
+                  $ref: '#/components/schemas/DrinkItem' 
+        '400': 
+          description: Invalid request 
+          content: 
+            application/json: 
+              schema: 
+                type: object 
+                properties: 
+                  message: 
+                    type: string
+                    
+
+components:
+  schemas:
+    FoodItem:
+      required:
+      - food_id
+      - food_name
+      - calorie
+      - weight
+      - trace_id
+      properties:
+        food_id:
+          type: string
+          example: a1234
+        food_name:
+          type: string
+          example: pizza
+        calorie:
+          type: number
+          example: 123
+        weight:
+          type: number
+          example: 32.1
+        trace_id:
+          type: string
+          example: a09eea70-838f-11ec-a8a3-0242ac120002
+      type: object
+        
+    DrinkItem:
+      required:
+      - drink_id
+      - drink_name
+      - calorie
+      - volume
+      - trace_id
+      properties:
+        drink_id:
+          type: string
+          example: b2345
+        drink_name:
+          type: string
+          example: coke
+        calorie:
+          type: number
+          example: 321
+        volume:
+          type: number
+          example: 12.3
+        trace_id:
+          type: string
+          example: 9c01b3d0-838f-11ec-a8a3-0242ac120002
+      type: object
