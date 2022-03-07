@@ -16,4 +16,5 @@ COPY . /app
  
 ENTRYPOINT [ "python3" ] 
  
+CMD [ "create_tables.py" ]
 CMD [ "app.py" ] 
