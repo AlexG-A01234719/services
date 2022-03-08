@@ -1,5 +1,3 @@
-import os.path
-import sqlite3
 import connexion
 from connexion import NoContent
 import datetime
@@ -26,19 +24,7 @@ with open('log_conf.yml', 'r') as f:
 
 logger = logging.getLogger('basicLogger')
 
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(BASE_DIR, app_config["datastore"]["filename"])
-conn = sqlite3.connect(db_path)
-
-def get_connection():
-    # just a debug print to verify that it's indeed getting called:
-    print("returning the connection") 
-    return conn
-
-# create a SQL Alchamy engine that uses the same in-memory sqlite connection
-DB_ENGINE = create_engine('sqlite://', creator = get_connection)
-
+DB_ENGINE = create_engine("sqlite:///%s" % app_config["datastore"]["filename"]) 
 Base.metadata.bind = DB_ENGINE 
 DB_SESSION = sessionmaker(bind=DB_ENGINE) 
 
