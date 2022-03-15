@@ -72,8 +72,8 @@ services:
     ports:
     - "3000:3000"
     depends_on:
-    - "processing"
-    - "audit_log"
+    - "process"
+    - "audit"
 # Names our volume 
 volumes: 
   my-db:
