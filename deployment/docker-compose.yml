@@ -20,7 +20,9 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE 
       KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:29092,OUTSIDE://acit3855-aguo-apache-kafka.eastus2.cloudapp.azure.com:9092 
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT 
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181 
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LOG_DIRS: /kafka/kafka-logs
+      KAFKA_BROKER_ID: 1
     volumes: 
       - /var/run/docker.sock:/var/run/docker.sock 
       - /home/azureuser/kafka:/kafka/kafka-logs

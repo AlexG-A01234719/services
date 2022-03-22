@@ -27,11 +27,6 @@ def get_food_item(index):
     client = KafkaClient(hosts=hostname) 
     topic = client.topics[str.encode(app_config["events"]["topic"])] 
  
-    # Here we reset the offset on start so that we retrieve 
-    # messages at the beginning of the message queue.  
-    # To prevent the for loop from blocking, we set the timeout to 
-    # 100ms. There is a risk that this loop never stops if the 
-    # index is large and messages are constantly being received! 
     consumer = topic.get_simple_consumer(reset_offset_on_start=True,  
                                          consumer_timeout_ms=1000) 
  
@@ -68,11 +63,6 @@ def get_drink_item(index):
     client = KafkaClient(hosts=hostname) 
     topic = client.topics[str.encode(app_config["events"]["topic"])] 
  
-    # Here we reset the offset on start so that we retrieve 
-    # messages at the beginning of the message queue.  
-    # To prevent the for loop from blocking, we set the timeout to 
-    # 100ms. There is a risk that this loop never stops if the 
-    # index is large and messages are constantly being received! 
     consumer = topic.get_simple_consumer(reset_offset_on_start=True,  
                                          consumer_timeout_ms=1000) 
  
@@ -86,10 +76,6 @@ def get_drink_item(index):
             if msg['type'] == "add_drink":
                 drink_list.append(msg['payload'])
  
-            # Find the event at the index you want and  
-            # return code 200 
-            # i.e., return event, 200 
-            
         if index < len(drink_list):
             event = drink_list[index]
             logger.info(f"Found Drink Item at index {index} with Drink ID {event['drink_id']}")

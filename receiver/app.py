@@ -22,13 +22,17 @@ with open('log_conf.yml', 'r') as f:
 
 logger = logging.getLogger('basicLogger')
 
+current_retry = 0
+
 while current_retry < app_config["events"]["max_retries"]:
     try:
         hostname = "%s:%d" % (app_config["events"]["hostname"],   
                             app_config["events"]["port"]) 
         client = KafkaClient(hosts=hostname)
         topic = client.topics[str.encode(app_config["events"]["topic"])]
+        producer = topic.get_sync_producer() 
         current_retry = app_config["events"]["max_retries"]
+        logger.info("Connected to Kafka")
     except:
         logger.error("Connection to Kafka failed!")
         time.sleep(app_config["events"]["sleep"])
@@ -37,7 +41,7 @@ while current_retry < app_config["events"]["max_retries"]:
 
 def add_food(body):
     """ Adds a food item """
-    producer = topic.get_sync_producer() 
+
     trace_id = str(uuid.uuid1())
     body['trace_id'] = trace_id
     msg = { "type": "add_food",  
@@ -55,9 +59,7 @@ def add_food(body):
     
 def add_drink(body):
     """ Adds a drink item """
-    client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}") 
-    topic = client.topics[str.encode(app_config['events']['topic'])] 
-    producer = topic.get_sync_producer() 
+
     trace_id = str(uuid.uuid1())
     body['trace_id'] = trace_id
     msg = { "type": "add_drink",  
