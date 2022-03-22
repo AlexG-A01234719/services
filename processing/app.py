@@ -35,7 +35,8 @@ def populate_stats():
     """ Periodically updates stats """
 
     logger.info("periodic processing started")
-    timestamp_now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    timestamp_now = datetime.datetime.now()
+    timestamp_now_str = timestamp_now.strftime("%Y-%m-%dT%H:%M:%S")
     
     session = DB_SESSION() 
 
@@ -55,8 +56,8 @@ def populate_stats():
     num_fi_entries = results_list[0]['num_fi_entries']
     num_di_entries = results_list[0]['num_di_entries']
     
-    food_url = f"{app_config['eventstore']['url']}/food?start_timestamp={timestamp_updated}Z&end_timestamp={timestamp_now}Z"
-    drink_url = f"{app_config['eventstore']['url']}/drink?start_timestamp={timestamp_updated}Z&end_timestamp={timestamp_now}Z"
+    food_url = f"{app_config['eventstore']['url']}/food?start_timestamp={timestamp_updated}&end_timestamp={timestamp_now_str}"
+    drink_url = f"{app_config['eventstore']['url']}/drink?start_timestamp={timestamp_updated}&end_timestamp={timestamp_now_str}"
     
     print(food_url)
     food_response = requests.get(food_url)
@@ -91,7 +92,7 @@ def populate_stats():
                total_fi_calorie,
                num_di_entries,
                total_di_calorie,
-               datetime.datetime.now())
+               timestamp_now)
     
     session.add(bp)
     session.commit()
