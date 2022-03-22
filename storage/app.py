@@ -8,8 +8,10 @@ import logging.config
 import yaml
 import uuid
 import json
+import time
 
 from sqlalchemy import create_engine
+from sqlalchemy import and_
 from sqlalchemy.orm import sessionmaker
 from base import Base
 from food_item import FoodItem
@@ -36,15 +38,15 @@ DB_SESSION = sessionmaker(bind=DB_ENGINE)
 logger.info(f"Connected to DB. Hostname:{app_config['datastore']['hostname']}, Port:{app_config['datastore']['port']}")
 
 
-def get_food_items(timestamp): 
+def get_food_items(start_timestamp, end_timestamp): 
     """ Gets new food item after the timestamp """ 
  
     session = DB_SESSION() 
  
-    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ") 
-   
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%S") 
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%S") 
  
-    readings = session.query(FoodItem).filter(FoodItem.date_created >= timestamp_datetime) 
+    readings = session.query(FoodItem).filter(and_(FoodItem.date_created >= start_timestamp_datetime, FoodItem.date_created < end_timestamp_datetime)) 
  
     results_list = [] 
  
@@ -53,21 +55,21 @@ def get_food_items(timestamp):
  
     session.close() 
      
-    logger.info("Query for Food Item readings after %s returns %d results" %  
-                (timestamp, len(results_list))) 
+    logger.info("Query for Food Item readings between %s and %s returns %d results" %  
+                (start_timestamp_datetime, end_timestamp_datetime, len(results_list))) 
  
     return results_list, 200
 
     
-def get_drink_items(timestamp): 
+def get_drink_items(start_timestamp, end_timestamp): 
     """ Gets new drink item after the timestamp """ 
  
     session = DB_SESSION() 
  
-    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ") 
-   
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%S") 
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%S")    
  
-    readings = session.query(DrinkItem).filter(DrinkItem.date_created >= timestamp_datetime) 
+    readings = session.query(DrinkItem).filter(and_(DrinkItem.date_created >= start_timestamp_datetime, DrinkItem.date_created < end_timestamp_datetime)) 
  
     results_list = [] 
  
@@ -76,18 +78,28 @@ def get_drink_items(timestamp):
  
     session.close() 
      
-    logger.info("Query for Drink Item readings after %s returns %d results" %  
-                (timestamp, len(results_list))) 
+    logger.info("Query for Drink Item readings between %s and %s returns %d results" %  
+                (start_timestamp_datetime, end_timestamp_datetime, len(results_list))) 
  
     return results_list, 200
     
 
 def process_messages(): 
     """ Process event messages """ 
-    hostname = "%s:%d" % (app_config["events"]["hostname"],   
-                          app_config["events"]["port"]) 
-    client = KafkaClient(hosts=hostname) 
-    topic = client.topics[str.encode(app_config["events"]["topic"])] 
+    current_retry = 0
+    
+    while current_retry < app_config["events"]["max_retries"]:
+        try:
+            hostname = "%s:%d" % (app_config["events"]["hostname"],   
+                                app_config["events"]["port"]) 
+            client = KafkaClient(hosts=hostname)
+            topic = client.topics[str.encode(app_config["events"]["topic"])]
+            current_retry = app_config["events"]["max_retries"]
+        except:
+            logger.error("Connection to Kafka failed!")
+            time.sleep(app_config["events"]["sleep"])
+            current_retry += 1
+        
      
     # Create a consume on a consumer group, that only reads new messages  
     # (uncommitted messages) when the service re-starts (i.e., it doesn't  

@@ -55,8 +55,8 @@ def populate_stats():
     num_fi_entries = results_list[0]['num_fi_entries']
     num_di_entries = results_list[0]['num_di_entries']
     
-    food_url = f"{app_config['eventstore']['url']}/food?timestamp={timestamp_updated}Z"
-    drink_url = f"{app_config['eventstore']['url']}/drink?timestamp={timestamp_updated}Z"
+    food_url = f"{app_config['eventstore']['url']}/food?start_timestamp={timestamp_updated}Z&end_timestamp={timestamp_now}Z"
+    drink_url = f"{app_config['eventstore']['url']}/drink?timestamp={timestamp_updated}Z&end_timestamp={timestamp_now}Z"
     
     print(food_url)
     food_response = requests.get(food_url)

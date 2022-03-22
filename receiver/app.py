@@ -7,6 +7,7 @@ import yaml
 import logging
 import logging.config
 import uuid
+import time
 
 from pykafka import KafkaClient
 
@@ -21,11 +22,21 @@ with open('log_conf.yml', 'r') as f:
 
 logger = logging.getLogger('basicLogger')
 
+while current_retry < app_config["events"]["max_retries"]:
+    try:
+        hostname = "%s:%d" % (app_config["events"]["hostname"],   
+                            app_config["events"]["port"]) 
+        client = KafkaClient(hosts=hostname)
+        topic = client.topics[str.encode(app_config["events"]["topic"])]
+        current_retry = app_config["events"]["max_retries"]
+    except:
+        logger.error("Connection to Kafka failed!")
+        time.sleep(app_config["events"]["sleep"])
+        current_retry += 1
+
 
 def add_food(body):
     """ Adds a food item """
-    client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}") 
-    topic = client.topics[str.encode(app_config['events']['topic'])] 
     producer = topic.get_sync_producer() 
     trace_id = str(uuid.uuid1())
     body['trace_id'] = trace_id
@@ -49,7 +60,6 @@ def add_drink(body):
     producer = topic.get_sync_producer() 
     trace_id = str(uuid.uuid1())
     body['trace_id'] = trace_id
-
     msg = { "type": "add_drink",  
             "datetime" :    
             datetime.datetime.now().strftime( 
