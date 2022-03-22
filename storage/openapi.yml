@@ -18,14 +18,14 @@ paths:
       operationId: app.get_food_items 
       description: Gets food items added after a timestamp 
       parameters: 
-        - name: start timestamp 
+        - name: start_timestamp 
           in: query 
           description: Limits the number of items on a page 
           schema: 
             type: string 
             format: date-time 
             example: 2016-08-29T09:12:33Z 
-        - name: end timestamp 
+        - name: end_timestamp 
           in: query 
           description: Limits the number of items on a page 
           schema: 
@@ -59,14 +59,14 @@ paths:
       operationId: app.get_drink_items 
       description: Gets drink items added after a timestamp 
       parameters: 
-        - name: start timestamp 
+        - name: start_timestamp 
           in: query 
           description: Limits the number of items on a page 
           schema: 
             type: string 
             format: date-time 
             example: 2016-08-29T09:12:33Z 
-        - name: end timestamp 
+        - name: end_timestamp 
           in: query 
           description: Limits the number of items on a page 
           schema: 
