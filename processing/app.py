@@ -19,7 +19,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import sqlite3 
 
 if os.path.exists("/data/data.sqlite"):
-    conn = sqlite3.connect('stats.sqlite') 
+    conn = sqlite3.connect('data.sqlite') 
     
     c = conn.cursor() 
     c.execute(''' 
