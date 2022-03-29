@@ -47,8 +47,8 @@ DB_SESSION = sessionmaker(bind=DB_ENGINE)
 
 import sqlite3 
 
-if os.path.exists("/data/data.sqlite"):
-    conn = sqlite3.connect('data.sqlite') 
+if not os.path.exists(app_config["datastore"]["filename"]):
+    conn = sqlite3.connect(app_config["datastore"]["filename"]) 
     
     c = conn.cursor() 
     c.execute(''' 
