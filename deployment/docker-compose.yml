@@ -79,6 +79,7 @@ services:
     volumes:
       - /home/azureuser/config/processing:/config
       - /home/azureuser/logs:/logs
+      - processing-db:/data
     depends_on: 
       - 'storage'
   audit: 
@@ -102,3 +103,4 @@ services:
 # Names our volume 
 volumes:
   my-db:
+  processing-db:
