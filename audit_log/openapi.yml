@@ -4,7 +4,7 @@ info:
   version: "1.0.0" 
   title: Food Audit API 
   contact: 
-    email: mmulder10@bcit.ca 
+    email: aguo11@my.bcit.ca
  
 paths: 
   /food_item: 
