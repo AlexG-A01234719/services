@@ -81,7 +81,6 @@ services:
       - "8100"
     networks:
       - "api.network"
-    network_mode: "host"
     environment:
       - TARGET_ENV=test
     volumes:
@@ -121,9 +120,9 @@ services:
     depends_on:
       - "receiver"
       - "storage"
-      - "processing"
-      - "audit_log"
-      - "dashboard-ui"
+      - "process"
+      - "audit"
+      - "dashboard"
     # Connects the port 80 of the nginx container to localhost:80 or localhost
     ports:
       - "80:80"
